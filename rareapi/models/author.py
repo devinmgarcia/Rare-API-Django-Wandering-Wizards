@@ -8,5 +8,5 @@ class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.CharField(max_length=150)
     profile_image_url = models.ImageField(upload_to="image", height_field=None, width_field=None, max_length=None, null=True)
-    # created_on = models.DateField(default="2021-08-16")
+    created_on = models.DateField()
     active = models.BooleanField( default=True )

@@ -4,3 +4,7 @@ from .comment import Comment
 from .tag import Tag
 from .post_tag import PostTag
 from .author import Author
+from .subscription import Subscription
+from .reaction import Reaction
+from .post_reaction import PostReaction
+from .demotion_queue import DemotionQueue
