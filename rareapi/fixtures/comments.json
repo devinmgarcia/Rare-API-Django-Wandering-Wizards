@@ -1,0 +1,11 @@
+[
+    {
+        "model": "rareapi.comment",
+        "pk": 1,
+        "fields": {
+            "post": 1,
+            "user": 1,
+            "content": "Yeah man, Rarer is the best platform in the station."
+        }
+    }
+]

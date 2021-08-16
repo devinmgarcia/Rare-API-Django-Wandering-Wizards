@@ -1,0 +1,16 @@
+[
+    {
+        "model": "rareapi.post",
+        "pk": 1,
+        "fields": {
+            "user": 1,
+            "category": [1],
+            "title": "Here at Rarer",
+            "publication_date": "2021-08-02",
+            "image_url": "https://dus.psu.edu/sites/default/files/styles/flexslider_full/public/images/homepage/we-re-here-you-slab.jpg?itok=SnXgO-AT",
+            "content": "Here at Rarer, we appreciate you stopping by our incredible source for entertainment. You are a Rarer breed.",
+            "approved": true,
+            "tags": [1]
+        }
+    }
+]
