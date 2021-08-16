@@ -11,7 +11,7 @@ class Post(models.Model):
         models ([type]): [description]
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    categories = models.ManyToManyField("Category", through="PostCategory", related_name="categories")
+    category = models.ForeignKey("Category", on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     publication_date = models.DateField()
     image_url = models.ImageField(upload_to="image", height_field=None, width_field=None, max_length=None, null=True)
