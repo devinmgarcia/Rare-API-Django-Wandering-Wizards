@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for event organizer's related Django user"""
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'is_staff']
+        fields = ['first_name', 'last_name', 'email', 'username', 'is_staff']
 
 class AuthorSerializer(serializers.ModelSerializer):
     """JSON serializer for event organizer"""
