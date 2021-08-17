@@ -18,3 +18,4 @@ class Post(models.Model):
     content = models.CharField(max_length=5000)
     approved = models.BooleanField()
     tags = models.ManyToManyField("Tag", through="PostTag", related_name="tags")
+    # comments = models.ForeignKey("Comment", on_delete=models.CASCADE)
