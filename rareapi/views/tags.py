@@ -5,7 +5,6 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
-from django.contrib.auth.models import User  # pylint:disable=imported-auth-user
 from rareapi.models import Tag
 
 
@@ -58,7 +57,7 @@ class TagView(ViewSet):
         """Handle POST operations
 
         Returns:
-            Response -- JSON serialized post instance
+            Response -- JSON serialized tag instance
         """
 
         # Create a new Python instance of the Tag class
@@ -81,4 +80,22 @@ class TagView(ViewSet):
         # client that something was wrong with its request data
         except ValidationError as ex:
             return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
+
+    def retrieve(self, request, pk=None):
+        """Handle GET requests for single tag
+
+        Returns:
+            Response -- JSON serialized tag instance
+        """
+        try:
+            # `pk` is a parameter to this function, and
+            # Django parses it from the URL route parameter
+            #   http://localhost:8000/posts/2
+            #
+            # The `2` at the end of the route becomes `pk`
+            tag = Tag.objects.get(pk=pk)
+            serializer = TagSerializer(tag, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
 
