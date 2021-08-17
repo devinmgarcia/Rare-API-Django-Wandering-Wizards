@@ -111,7 +111,6 @@ class PostView(ViewSet):
         post.maker = request.data["maker"]
         post.number_of_players = request.data["numberOfPlayers"]
         post.description = request.data["description"]
-        post.post = post
 
         # ? post_type = PostType.objects.get(pk=request.data["postTypeId"])
         # ? post.post_type = post_type

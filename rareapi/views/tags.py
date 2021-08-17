@@ -99,3 +99,23 @@ class TagView(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+    def update(self, request, pk=None):
+        """Handle PUT requests for a post
+
+        Returns:
+            Response -- Empty body with 204 status code
+        """
+
+        # Do mostly the same thing as POST, but instead of
+        # creating a new instance of Tag, get the tag record
+        # from the database whose primary key is `pk`
+        # Via query params, PK becomes whatever ID is passed through the param
+        tag = Tag.objects.get(pk=pk)
+        tag.label = request.data["label"]
+
+        tag.save()
+
+        # 204 status code means everything worked but the
+        # server is not sending back any data in the response
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
