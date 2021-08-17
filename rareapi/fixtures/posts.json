@@ -12,5 +12,19 @@
             "approved": true,
             "tags": [1]
         }
+    },
+    {
+        "model": "rareapi.post",
+        "pk": 2,
+        "fields": {
+            "user": 1,
+            "category": 1,
+            "title": "Here at not Rarerer",
+            "publication_date": "2021-08-02",
+            "image_url": "https://dus.psu.edu/sites/default/files/styles/flexslider_full/public/images/homepage/we-re-here-you-slab.jpg?itok=SnXgO-AT",
+            "content": "WOOO",
+            "approved": true,
+            "tags": [1]
+        }
     }
 ]

@@ -1,4 +1,6 @@
 """View module for handling requests about posts"""
+from django.db.models.fields.related import ManyToManyField
+from rareapi.models.comment import Comment
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseServerError
 from rest_framework.viewsets import ViewSet
@@ -8,12 +10,17 @@ from rest_framework import status
 from django.contrib.auth.models import User  # pylint:disable=imported-auth-user
 from rareapi.models import Post, Category, Author
 
-
 class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for event host's related Django user"""
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email')
+
+class CommentSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False)
+    class Meta:
+        model = Comment
+        fields = ('content', 'user', 'created_on')
 
 class PostSerializer(serializers.ModelSerializer):
     """JSON serializer for posts
@@ -22,11 +29,12 @@ class PostSerializer(serializers.ModelSerializer):
         serializer type
     """
     user = UserSerializer(many=False)
-    
+    comments = CommentSerializer(many=True)
+
     class Meta:
         model = Post
         fields = ('id', 'title', 'content', 'publication_date',
-                  'image_url', 'approved', 'category', 'tags', 'user')
+                  'image_url', 'approved', 'category', 'tags', 'user', 'comments' )
         depth = 1
 
 
@@ -111,7 +119,7 @@ class PostView(ViewSet):
         post.maker = request.data["maker"]
         post.number_of_players = request.data["numberOfPlayers"]
         post.description = request.data["description"]
-        post.post = post
+        
 
         # ? post_type = PostType.objects.get(pk=request.data["postTypeId"])
         # ? post.post_type = post_type
