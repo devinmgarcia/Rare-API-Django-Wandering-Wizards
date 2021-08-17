@@ -12,4 +12,10 @@
             "name": "Rare"
         }
     ],
+    "cSpell.ignoreWords": [
+        "authtoken",
+        "rareapi",
+        "tag",
+        "token"
+    ],
 }

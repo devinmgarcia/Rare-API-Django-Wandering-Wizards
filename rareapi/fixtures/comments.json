@@ -6,11 +6,18 @@
             "post": 1,
             "user": 1,
             "content": "Yeah man, Rarer is the best platform in the station.",
-<<<<<<< HEAD
             "created_on": "2021-08-17"
-=======
-            "created_on": "2021-08-02"
->>>>>>> main
+
+        }
+    },
+    {
+        "model": "rareapi.comment",
+        "pk": 2,
+        "fields": {
+            "post": 2,
+            "user": 1,
+            "content": "Wow, Rarer is amazinger.",
+            "created_on": "2021-08-18"
         }
     }
 ]
