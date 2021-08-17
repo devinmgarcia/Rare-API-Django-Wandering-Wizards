@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from django.contrib.auth.models import User  # pylint:disable=imported-auth-user
-from rareapi.models import Post, Category
+from rareapi.models import Post, Category, Author
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -41,13 +41,13 @@ class PostView(ViewSet):
         """
 
         # Uses the token passed in the `Authorization` header
-        user = User.objects.get(user=request.auth.user)
+        user = User.objects.get(username=request.auth.user)
 
         # Create a new Python instance of the Post class
         # and set its properties from what was sent in the
         # body of the request from the client.
         post = Post()
-
+        post.user = user
         post.title = request.data["title"]
         post.publication_date = request.data["publication_date"]
         post.image_url = request.data["image_url"]
@@ -58,8 +58,8 @@ class PostView(ViewSet):
         # whose `id` is what the client passed as the
         # `postTypeId` in the body of the request.
 
-        # ? post_type = PostType.objects.get(pk=request.data["postTypeId"])
-        # ? post.post_type = post_type
+        category = Category.objects.get(pk=request.data["category_id"])
+        post.category = category
 
         # Try to save the new post to the database, then
         # serialize the post instance as JSON, and send the
