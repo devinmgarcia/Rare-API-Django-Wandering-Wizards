@@ -1,0 +1,13 @@
+[
+    {
+        "model": "rareapi.author",
+        "pk": 4,
+        "fields": {
+            "user": 1,
+            "bio": "I'm an admin",
+            "profile_image_url": "image/2-0caf987c-ec3f-4014-ae40-5f3298eb24e9.jpeg",
+            "created_on": "2020-08-29",
+            "active": 1
+        }
+    }
+]
