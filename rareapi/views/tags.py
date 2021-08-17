@@ -54,3 +54,31 @@ class TagView(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def create(self, request):
+        """Handle POST operations
+
+        Returns:
+            Response -- JSON serialized post instance
+        """
+
+        # Create a new Python instance of the Tag class
+        # and set its properties from what was sent in the
+        # body of the request from the client.
+        tag = Tag()
+
+        tag.label = request.data["label"]
+
+        # Try to save the new tag to the database, then
+        # serialize the tag instance as JSON, and send the
+        # JSON as a response to the client request
+        try:
+            tag.save()
+            serializer = TagSerializer(tag, context={'request': request})
+            return Response(serializer.data)
+
+        # If anything went wrong, catch the exception and
+        # send a response with a 400 status code to tell the
+        # client that something was wrong with its request data
+        except ValidationError as ex:
+            return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
+
