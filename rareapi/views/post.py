@@ -176,7 +176,6 @@ class PostView(ViewSet):
         user = User.objects.get(username=request.auth.user)
         if user is not None:
             posts = posts.filter(user__id=user.id)
-
         try:
             serializer = PostSerializer(posts, many=True, context={'request': request})
             return Response(serializer.data)
