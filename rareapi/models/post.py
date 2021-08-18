@@ -19,3 +19,11 @@ class Post(models.Model):
     content = models.CharField(max_length=5000)
     approved = models.BooleanField()
     tags = models.ManyToManyField("Tag", through="PostTag", related_name="tags")
+    # comments = models.ForeignKey("Comment", on_delete=models.CASCADE)
+    
+    @property
+    def is_post_author(self):
+        return self.__is_post_author
+    @is_post_author.setter
+    def is_post_author(self, value):
+        self.__is_post_author = value
