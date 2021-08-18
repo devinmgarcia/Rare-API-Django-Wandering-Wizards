@@ -23,11 +23,24 @@ class AuthorView(ViewSet):
             authors, many=True, context={'request': request})
         return Response(serializer.data)
 
+    def retrieve(self, request, pk=None):
+        """Handle GET requests for single author
+
+        Returns:
+            Response -- JSON serialized author instance
+        """
+        try:
+            author = Author.objects.get(pk=pk)
+            serializer = AuthorSerializer(author, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return HttpResponseServerError(ex)
+
 class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for event organizer's related Django user"""
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'is_staff']
+        fields = ['first_name', 'last_name', 'email', 'username', 'is_staff']
 
 class AuthorSerializer(serializers.ModelSerializer):
     """JSON serializer for event organizer"""
@@ -35,4 +48,5 @@ class AuthorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Author
-        fields = ['id', 'user', 'profile_image_url', 'created_on', 'active']
+        fields = ['id', 'user', 'profile_image_url', 'created_on', 'active', 'bio']
+        depth = 1
