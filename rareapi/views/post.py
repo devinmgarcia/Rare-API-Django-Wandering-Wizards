@@ -119,7 +119,7 @@ class PostView(ViewSet):
         # from the database whose primary key is `pk`
         # Via query params, PK becomes whatever ID is passed through the param
         post = Post.objects.get(pk=pk)
-        post.category = request.data["category_id"]
+        post.category = Category.objects.get(pk=request.data["category_id"])
         post.title = request.data["title"]
         post.image_url = request.data["image_url"]
         post.content = request.data["content"]
@@ -128,6 +128,7 @@ class PostView(ViewSet):
         # ? post.post_type = post_type
 
         post.save()
+        post.tags.set(request.data["tags"])
 
         # 204 status code means everything worked but the
         # server is not sending back any data in the response
