@@ -34,13 +34,16 @@ class PostSerializer(serializers.ModelSerializer):
     Arguments:
         serializer type
     """
+    is_post_author = serializers.SerializerMethodField()
+    def get_is_post_author(self, object):
+        return self.context["request"].auth.user == object.user
     user = UserSerializer(many=False)
     comments = CommentSerializer(many=True)
 
     class Meta:
         model = Post
         fields = ('id', 'title', 'content', 'publication_date',
-                  'image_url', 'approved', 'category', 'tags', 'user', 'comments' )
+                  'image_url', 'approved', 'category', 'tags', 'user', 'comments', 'is_post_author' )
         depth = 1
 
 
@@ -116,22 +119,23 @@ class PostView(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
-        post = Post.objects.get(user=request.auth.user)
+        post = Post.objects.get(pk=pk)
 
         # Do mostly the same thing as POST, but instead of
         # creating a new instance of Post, get the post record
         # from the database whose primary key is `pk`
         # Via query params, PK becomes whatever ID is passed through the param
         post = Post.objects.get(pk=pk)
-        post.name = request.data["name"]
-        post.maker = request.data["maker"]
-        post.number_of_players = request.data["numberOfPlayers"]
-        post.description = request.data["description"]
+        post.category = Category.objects.get(pk=request.data["category_id"])
+        post.title = request.data["title"]
+        post.image_url = request.data["image_url"]
+        post.content = request.data["content"]
 
         # ? post_type = PostType.objects.get(pk=request.data["postTypeId"])
         # ? post.post_type = post_type
 
         post.save()
+        post.tags.set(request.data["tags"])
 
         # 204 status code means everything worked but the
         # server is not sending back any data in the response
