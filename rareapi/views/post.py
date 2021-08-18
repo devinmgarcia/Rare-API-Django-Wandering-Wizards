@@ -3,7 +3,7 @@ from django.db.models.fields.related import ManyToManyField
 from rest_framework.decorators import action
 from rareapi.models.comment import Comment
 from django.core.exceptions import ValidationError
-from django.http import HttpResponseServerError
+from django.http import HttpResponseServerError, request
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
@@ -15,13 +15,18 @@ class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for event host's related Django user"""
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('first_name', 'last_name', 'email', 'id')
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False)
+    isAuthor = serializers.SerializerMethodField()
+
+    def get_isAuthor(self, object):
+        return self.context['request'].auth.user == object.user
+
     class Meta:
         model = Comment
-        fields = ('content', 'user', 'created_on')
+        fields = ('content', 'user', 'created_on', 'isAuthor', 'id')
 
 class PostSerializer(serializers.ModelSerializer):
     """JSON serializer for posts
@@ -97,7 +102,9 @@ class PostView(ViewSet):
             #   http://localhost:8000/posts/2
             #
             # The `2` at the end of the route becomes `pk`
+
             post = Post.objects.get(pk=pk)
+
             serializer = PostSerializer(post, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
