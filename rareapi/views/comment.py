@@ -111,9 +111,6 @@ class CommentView(ViewSet):
         comment.description = request.data["description"]
         comment.comment = comment
 
-        # ? comment = CommentType.objects.get(pk=request.data["commentTypeId"])
-        # ? comment.comment = comment
-
         comment.save()
 
         # 204 status code means everything worked but the
@@ -146,46 +143,13 @@ class CommentView(ViewSet):
         """
         # Get all comment records from the database
         comments = Comment.objects.all()
-        user = request.auth.user
-        # Support filtering comments by type
-        #    http://localhost:8000/comments?type=1
-        #
-        # That URL will retrieve all tabletop comments
-
-        # comment = self.request.query_params.get('type', None)
-        # if comment is not None:
-        #     comments = comments.filter(comment__id=comment)
-        
 
         serializer = CommentSerializer(
             comments, many=True, context={'request': request})
         return Response(serializer.data)
 
-    # @action(methods=['post', 'delete'], detail=True)
-    # def validateAuthor(self, request, pk=None):
-    #     """Managing users signing up for comments"""
-    #     # Django uses the `Authorization` header to determine
-    #     # which user is making the request to sign up
-    #     user = User.objects.get(username=request.auth.user)
-    #     try:
-    #         # Handle the case if the client specifies a game
-    #         # that doesn't exist
-    #         comment = Comment.objects.get(pk=pk)
-    #     except Comment.DoesNotExist:
-    #         return Response(
-    #             {'message': 'Comment does not exist.'},
-    #             status=status.HTTP_404_NOT_FOUND
-    #         )
-
-    #     # User wants to leave a previously joined comment
-    #     elif request.method == "DELETE":
-    #         try:
-    #             # The many to many relationship has a .remove method that removes the user from the attendees list
-    #             # The method deletes the row in the join table that has the user_id and comment_id
-    #             comment.attendees.remove(user)
-    #             return Response(None, status=status.HTTP_204_NO_CONTENT)
-    #         except Exception as ex:
-    #             return Response({'message': ex.args[0]})
-
+    @action(methods=['GET'], detail=True)
+    def comment_by_post_id(self, request, pk):
+        post = Post.objects.get(pk=pk)
         
 
