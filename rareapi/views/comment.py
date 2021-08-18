@@ -6,14 +6,15 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from django.contrib.auth.models import User  # pylint:disable=imported-auth-user
-from rareapi.models import Comment, Category
+from rareapi.models import Comment, Category, Post
+from rest_framework.decorators import action
 
 
-class UserSerializer(serializers.ModelSerializer):
-    """JSON serializer for event host's related Django user"""
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'email')
+# class UserSerializer(serializers.ModelSerializer):
+#     """JSON serializer for comment host's related Django user"""
+#     class Meta:
+#         model = User
+#         fields = ('first_name', 'last_name', 'email')
 
 class CommentSerializer(serializers.ModelSerializer):
     """JSON serializer for comments
@@ -21,11 +22,11 @@ class CommentSerializer(serializers.ModelSerializer):
     Arguments:
         serializer type
     """
-    user = UserSerializer(many=False)
+    # user = UserSerializer(many=False)
     
     class Meta:
         model = Comment
-        fields = ('id', 'post', 'content', 'created_on', 'user')
+        fields = ('id', 'content', 'created_on', 'post' )
         depth = 1
 
 
@@ -40,7 +41,7 @@ class CommentView(ViewSet):
         """
 
         # Uses the token passed in the `Authorization` header
-        user = User.objects.get(user=request.auth.user)
+        user = User.objects.get(username=request.auth.user)
 
         # Create a new Python instance of the Comment class
         # and set its properties from what was sent in the
@@ -48,7 +49,7 @@ class CommentView(ViewSet):
         comment = Comment()
 
         comment.user = user
-        comment.post = request.data["post"]
+        comment.post = Post.objects.get(pk=request.data['post_id'])
         comment.content = request.data["content"]
         comment.created_on = request.data["created_on"]
 
@@ -64,7 +65,6 @@ class CommentView(ViewSet):
         # JSON as a response to the client request
         try:
             comment.save()
-            comment.tags.set(request.data["tags"])
             serializer = CommentSerializer(comment, context={'request': request})
             return Response(serializer.data)
 
@@ -146,16 +146,46 @@ class CommentView(ViewSet):
         """
         # Get all comment records from the database
         comments = Comment.objects.all()
-
+        user = request.auth.user
         # Support filtering comments by type
         #    http://localhost:8000/comments?type=1
         #
         # That URL will retrieve all tabletop comments
 
-        comment = self.request.query_params.get('type', None)
-        if comment is not None:
-            comments = comments.filter(comment__id=comment)
+        # comment = self.request.query_params.get('type', None)
+        # if comment is not None:
+        #     comments = comments.filter(comment__id=comment)
+        
 
         serializer = CommentSerializer(
             comments, many=True, context={'request': request})
         return Response(serializer.data)
+
+    # @action(methods=['post', 'delete'], detail=True)
+    # def validateAuthor(self, request, pk=None):
+    #     """Managing users signing up for comments"""
+    #     # Django uses the `Authorization` header to determine
+    #     # which user is making the request to sign up
+    #     user = User.objects.get(username=request.auth.user)
+    #     try:
+    #         # Handle the case if the client specifies a game
+    #         # that doesn't exist
+    #         comment = Comment.objects.get(pk=pk)
+    #     except Comment.DoesNotExist:
+    #         return Response(
+    #             {'message': 'Comment does not exist.'},
+    #             status=status.HTTP_404_NOT_FOUND
+    #         )
+
+    #     # User wants to leave a previously joined comment
+    #     elif request.method == "DELETE":
+    #         try:
+    #             # The many to many relationship has a .remove method that removes the user from the attendees list
+    #             # The method deletes the row in the join table that has the user_id and comment_id
+    #             comment.attendees.remove(user)
+    #             return Response(None, status=status.HTTP_204_NO_CONTENT)
+    #         except Exception as ex:
+    #             return Response({'message': ex.args[0]})
+
+        
+

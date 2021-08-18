@@ -1,3 +1,4 @@
+from django.db.models.deletion import SET_NULL
 from rareapi.models.tag import Tag
 from django.db import models
 from django.contrib.auth.models import User
@@ -11,7 +12,7 @@ class Post(models.Model):
         models ([type]): [description]
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey("Category", on_delete=models.CASCADE)
+    category = models.ForeignKey("Category", null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=50)
     publication_date = models.DateField()
     image_url = models.ImageField(upload_to="image", height_field=None, width_field=None, max_length=None, null=True)
