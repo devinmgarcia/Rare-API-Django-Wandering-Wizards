@@ -135,7 +135,7 @@ class PostView(ViewSet):
         # ? post.post_type = post_type
 
         post.save()
-        post.tags.set(request.data["tags"])
+        post.tags.set([tag["id"] for tag in request.data["tags"]])
 
         # 204 status code means everything worked but the
         # server is not sending back any data in the response
