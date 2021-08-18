@@ -1,5 +1,6 @@
 """View module for handling requests about posts"""
 from django.db.models.fields.related import ManyToManyField
+from rest_framework.decorators import action
 from rareapi.models.comment import Comment
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseServerError
@@ -161,10 +162,24 @@ class PostView(ViewSet):
         #
         # That URL will retrieve all tabletop posts
 
-        post_type = self.request.query_params.get('type', None)
-        if post_type is not None:
-            posts = posts.filter(post_type__id=post_type)
+        # post_user = self.request.query_params.get('user', None)
+        # if post_user is not None:
+        #     posts = posts.filter(post_type__id=post_type)
 
         serializer = PostSerializer(
             posts, many=True, context={'request': request})
         return Response(serializer.data)
+
+    @action(methods=['get'], detail=False)
+    def myposts(self, request):
+        posts = Post.objects.all()
+        user = User.objects.get(username=request.auth.user)
+        if user is not None:
+            posts = posts.filter(user__id=user.id)
+
+        try:
+            serializer = PostSerializer(posts, many=True, context={'request': request})
+            return Response(serializer.data)
+        except:
+            return("fuck you")
+        
