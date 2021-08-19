@@ -179,6 +179,17 @@ class PostView(ViewSet):
         try:
             serializer = PostSerializer(posts, many=True, context={'request': request})
             return Response(serializer.data)
-        except:
-            return("fuck you")
+        except Exception as ex:
+            return({'message': ex.args[0]})
+
+    @action(methods=['put'], detail=True)
+    def approve(self, request, pk=None):
+        post = Post.objects.get(pk=pk)
+        post.approved = request.data['approved']
+        try:
+            post.save()
+            serializer = PostSerializer(post, many=False, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return Response({'message': ex.args[0]})
         
