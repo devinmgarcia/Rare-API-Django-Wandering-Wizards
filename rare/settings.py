@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'rareapi',
 ]
 
+MEDIA_ROOT = 'media'
+MEDIA_URL = '/media/'
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
