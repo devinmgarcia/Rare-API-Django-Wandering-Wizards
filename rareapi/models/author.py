@@ -10,3 +10,4 @@ class Author(models.Model):
     profile_image_url = models.ImageField(upload_to="image", height_field=None, width_field=None, max_length=None, null=True)
     created_on = models.DateField()
     active = models.BooleanField( default=True )
+
