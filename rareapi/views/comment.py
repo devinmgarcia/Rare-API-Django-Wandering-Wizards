@@ -98,18 +98,12 @@ class CommentView(ViewSet):
         Returns:
             Response -- Empty body with 204 status code
         """
-        comment = Comment.objects.get(user=request.auth.user)
-
         # Do mostly the same thing as COMMENT, but instead of
         # creating a new instance of Comment, get the comment record
         # from the database whose primary key is `pk`
         # Via query params, PK becomes whatever ID is passed through the param
         comment = Comment.objects.get(pk=pk)
-        comment.name = request.data["name"]
-        comment.maker = request.data["maker"]
-        comment.number_of_players = request.data["numberOfPlayers"]
-        comment.description = request.data["description"]
-        comment.comment = comment
+        comment.content = request.data["content"]
 
         comment.save()
 
@@ -147,9 +141,4 @@ class CommentView(ViewSet):
         serializer = CommentSerializer(
             comments, many=True, context={'request': request})
         return Response(serializer.data)
-
-    @action(methods=['GET'], detail=True)
-    def comment_by_post_id(self, request, pk):
-        post = Post.objects.get(pk=pk)
-        
 

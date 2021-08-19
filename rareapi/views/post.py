@@ -131,9 +131,6 @@ class PostView(ViewSet):
         post.image_url = request.data["image_url"]
         post.content = request.data["content"]
 
-        # ? post_type = PostType.objects.get(pk=request.data["postTypeId"])
-        # ? post.post_type = post_type
-
         post.save()
         post.tags.set(request.data["tags"])
 
