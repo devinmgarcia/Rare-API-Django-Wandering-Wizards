@@ -1,4 +1,5 @@
 """View module for handling requests about posts"""
+from rareapi.views.author import AuthorSerializer
 from django.db.models.fields.related import ManyToManyField
 from rest_framework.decorators import action
 from rareapi.models.comment import Comment
@@ -9,16 +10,26 @@ from rest_framework.response import Response
 from rest_framework import serializers
 from rest_framework import status
 from django.contrib.auth.models import User  # pylint:disable=imported-auth-user
-from rareapi.models import Post, Category, Author
+from rareapi.models import Post, Category, Author, author
 from django.core.files.base import ContentFile
 import base64
 import uuid
 
+
+class AuthorSerializer(serializers.ModelSerializer):
+    """JSON serializer for event organizer"""
+
+    class Meta:
+        model = Author
+        fields = ['id', 'profile_image_url', 'created_on', 'active', 'bio']
+        depth = 1
+
 class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for event host's related Django user"""
+    author = AuthorSerializer(many=False)
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'id')
+        fields = ('first_name', 'last_name', 'email', 'id', 'author')
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False)
@@ -42,7 +53,7 @@ class PostSerializer(serializers.ModelSerializer):
         return self.context["request"].auth.user == object.user
     user = UserSerializer(many=False)
     comments = CommentSerializer(many=True)
-
+    
     class Meta:
         model = Post
         fields = ('id', 'title', 'content', 'publication_date',
