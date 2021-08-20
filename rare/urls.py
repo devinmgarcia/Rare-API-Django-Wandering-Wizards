@@ -18,6 +18,8 @@ from django.urls import path
 from django.contrib import admin
 from rest_framework import routers
 from rareapi.views import PostView, login_user, register_user, CategoryView, AuthorView, CommentView, TagView
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 
@@ -35,4 +37,4 @@ urlpatterns = [
     path('register', register_user),
     path('login', login_user),
     path('api-auth', include('rest_framework.urls', namespace='rest_framework')),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

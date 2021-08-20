@@ -8,7 +8,7 @@ from rest_framework import serializers
 from rest_framework import status
 from rareapi.models import Author
 from django.contrib.auth.models import User
-
+from rest_framework.decorators import action
 
 class AuthorView(ViewSet):
     """Rare Authors"""
@@ -36,6 +36,15 @@ class AuthorView(ViewSet):
         except Exception as ex:
             return HttpResponseServerError(ex)
 
+    @action(methods=['get'], detail=False)
+    def getAuthor(self, request):
+        user = Author.objects.get(user=request.auth.user)
+        try:
+            serializer = AuthorSerializer(user, many=False, context={'request': request})
+            return Response(serializer.data)
+        except Exception as ex:
+            return Response({'message': ex.args[0]})
+
 class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for event organizer's related Django user"""
     class Meta:
@@ -50,3 +59,4 @@ class AuthorSerializer(serializers.ModelSerializer):
         model = Author
         fields = ['id', 'user', 'profile_image_url', 'created_on', 'active', 'bio']
         depth = 1
+
