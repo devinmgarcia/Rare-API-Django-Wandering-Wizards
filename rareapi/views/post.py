@@ -145,10 +145,10 @@ class PostView(ViewSet):
         post = Post.objects.get(pk=pk)
         post.category = Category.objects.get(pk=request.data["category_id"])
         post.title = request.data["title"]
-        format, imgstr = request.data["image_url"].split(';base64,')
-        ext = format.split('/')[-1]
-        data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["gameId"]}-{uuid.uuid4()}.{ext}')
-        post.image_url = data
+        # format, imgstr = request.data["image_url"].split(';base64,')
+        # ext = format.split('/')[-1]
+        # data = ContentFile(base64.b64decode(imgstr), name=f'{request.data["gameId"]}-{uuid.uuid4()}.{ext}')
+        # post.image_url = data
         post.content = request.data["content"]
 
         post.save()

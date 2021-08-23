@@ -8,8 +8,8 @@
         {
             "previewLimit": 50,
             "driver": "SQLite",
-            "database": "db.sqlite3",
-            "name": "Rare"
+            "name": "rare",
+            "database": "db.sqlite3"
         }
     ],
     "cSpell.ignoreWords": [
