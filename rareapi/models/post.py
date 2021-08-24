@@ -13,7 +13,7 @@ class Post(models.Model):
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey("Category", null=True, on_delete=models.SET_NULL)
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=100)
     publication_date = models.DateField()
     image_url = models.ImageField(upload_to="image", height_field=None, width_field=None, max_length=None, null=True)
     content = models.CharField(max_length=5000)
