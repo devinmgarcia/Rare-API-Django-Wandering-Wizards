@@ -16,7 +16,7 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     publication_date = models.DateField()
     image_url = models.ImageField(upload_to="image", height_field=None, width_field=None, max_length=None, null=True)
-    content = models.CharField(max_length=5000)
+    content = models.TextField()
     approved = models.BooleanField()
     tags = models.ManyToManyField("Tag", through="PostTag", related_name="tags")
     
