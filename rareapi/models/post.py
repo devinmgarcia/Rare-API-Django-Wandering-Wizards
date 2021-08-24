@@ -15,7 +15,7 @@ class Post(models.Model):
     category = models.ForeignKey("Category", null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=100)
     publication_date = models.DateField()
-    image_url = models.ImageField(upload_to="image", height_field=None, width_field=None, max_length=None, null=True)
+    image_url = models.ImageField(upload_to="image", height_field=None, width_field=None, max_length=255, null=True)
     content = models.TextField()
     approved = models.BooleanField()
     tags = models.ManyToManyField("Tag", through="PostTag", related_name="tags")
