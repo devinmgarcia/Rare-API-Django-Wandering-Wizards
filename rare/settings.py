@@ -62,6 +62,7 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_WHITELIST = (
     'https://rarer.herokuapp.com',
+    'http://localhost:3000',
 )
 
 MIDDLEWARE = [
